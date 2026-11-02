@@ -5,8 +5,9 @@
     "description": "Пошаговый курс: создание бота, приём Telegram Stars и оплаты картой, запуск 24/7.",
     "type": "digital",
     "price_stars": 200,
-    "delivery": "Спасибо за покупку! 🎉 Ваш курс — во вложении ниже. Вопросы по оплате: /paysupport",
-    "file": "files/course.pdf"
+    "delivery": "Спасибо за покупку! 🎉 Курс открыт. PDF-версия — во вложении ниже, а уроки можно проходить прямо в боте. Вопросы по оплате: /paysupport",
+    "file": "files/course.pdf",
+    "course": true
   },
   {
     "id": "bot_template",
