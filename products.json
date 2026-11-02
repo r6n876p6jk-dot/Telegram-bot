@@ -1,0 +1,29 @@
+[
+  {
+    "id": "course_bot",
+    "title": "Курс «Telegram-бот с оплатой за 1 вечер»",
+    "description": "Пошаговый курс: создание бота, приём Telegram Stars и оплаты картой, запуск 24/7.",
+    "type": "digital",
+    "price_stars": 200,
+    "delivery": "Спасибо за покупку! 🎉 Курс открыт. PDF-версия — во вложении ниже, а уроки можно проходить прямо в боте. Вопросы по оплате: /paysupport",
+    "file": "files/course.pdf",
+    "course": true
+  },
+  {
+    "id": "bot_template",
+    "title": "Готовый шаблон бота-магазина",
+    "description": "Исходный код бота с каталогом и оплатой. Замените товары и запускайте.",
+    "type": "digital",
+    "price_stars": 100,
+    "delivery": "Спасибо за покупку! Шаблон: https://example.com/template"
+  },
+  {
+    "id": "setup_service",
+    "title": "Настройка бота под ключ",
+    "description": "Настрою и запущу бота-магазин с вашими товарами.",
+    "type": "physical",
+    "price_rub": 2990,
+    "need_address": false,
+    "delivery": "Оплата получена! Я свяжусь с вами в ближайшее время."
+  }
+]
