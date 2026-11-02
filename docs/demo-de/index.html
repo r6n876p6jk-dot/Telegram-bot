@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Café Milchschaum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Golos+Text:wght@400;500;600;700&display=swap">
+<style>
+body { margin: 0; }
+/* Layout: landing page of a neighbourhood coffee shop on the left, the AI consultant pinned as a side panel on wide screens and a floating sheet on phones. */
+:root {
+  --bg: #f3f4ef;
+  --surface: #ffffff;
+  --ink: #1d231f;
+  --muted: #5d685f;
+  --line: #dde2d8;
+  --accent: #2c6a4c;
+  --accent-ink: #ffffff;
+  --crema: #b9782f;
+  --crema-soft: #f6ead9;
+  --bubble-me: #2c6a4c;
+  --bubble-bot: #eef1ea;
+  --tg: #e8f1fb;
+  --tg-ink: #1d4f86;
+  --shadow: 0 10px 30px rgba(29, 35, 31, .12);
+  --f-display: "Yeseva One", Georgia, "Times New Roman", serif;
+  --f-body: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131714; --surface: #1b211d; --ink: #e9ece6; --muted: #a2ada4; --line: #2c352f;
+    --accent: #6cbf93; --accent-ink: #0f1a14; --crema: #e2a45c; --crema-soft: #2c2318;
+    --bubble-me: #2f7a56; --bubble-bot: #232a25; --tg: #17283a; --tg-ink: #9cc6f2;
+    --shadow: 0 10px 30px rgba(0, 0, 0, .45); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131714; --surface: #1b211d; --ink: #e9ece6; --muted: #a2ada4; --line: #2c352f;
+  --accent: #6cbf93; --accent-ink: #0f1a14; --crema: #e2a45c; --crema-soft: #2c2318;
+  --bubble-me: #2f7a56; --bubble-bot: #232a25; --tg: #17283a; --tg-ink: #9cc6f2;
+  --shadow: 0 10px 30px rgba(0, 0, 0, .45); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.55; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+h1, h2 { font-family: var(--f-display); font-weight: 400; letter-spacing: .01em; }
+a { color: var(--accent); }
+button, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--crema); outline-offset: 2px; }
+
+.demo-bar {
+  background: var(--ink); color: var(--bg); font-size: 13px;
+  padding-block: 8px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.demo-bar .in { max-width: 1240px; margin: 0 auto; display: flex; gap: 8px 16px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.demo-bar b { color: var(--crema); font-weight: 600; }
+
+.shell {
+  max-width: 1240px; margin: 0 auto;
+  padding-block: 0 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 32px; align-items: start;
+}
+.site { min-width: 0; }
+
+header.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 22px; border-bottom: 1px solid var(--line); }
+.logo { font-family: var(--f-display); font-size: 28px; line-height: 1; }
+.logo small { display: block; font-family: var(--f-body); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+nav.links { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; }
+nav.links a { color: var(--muted); text-decoration: none; }
+nav.links a:hover { color: var(--ink); }
+
+.hero { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 28px; padding-block: 36px 28px; align-items: center; }
+.hero h1 { font-size: clamp(32px, 4vw, 46px); line-height: 1.05; }
+.hero p.lead { color: var(--muted); font-size: 17px; max-width: 46ch; margin: 14px 0 20px; }
+.hero .facts { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-size: 13px; }
+.cup { aspect-ratio: 1; max-width: 100%; width: 100%; max-width: 300px; justify-self: center; }
+
+section.block { padding-block: 26px; border-top: 1px solid var(--line); }
+section.block h2 { font-size: 28px; margin-bottom: 14px; }
+.kicker { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--crema); font-weight: 600; margin-bottom: 6px; }
+
+.menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 36px; }
+.menu h3 { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin: 10px 0 4px; grid-column: 1 / -1; }
+.item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding-block: 8px; border-bottom: 1px dashed var(--line); }
+.item .name { font-weight: 500; }
+.item .price { font-variant-numeric: tabular-nums; font-weight: 600; }
+.item .note { grid-column: 1 / -1; color: var(--muted); font-size: 13px; }
+
+.info { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.info dt { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.info dd { margin: 4px 0 0; }
+
+/* Chat panel */
+.chat {
+  position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); margin-top: 16px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column; height: min(720px, calc(100vh - 40px)); min-height: 520px; overflow: hidden;
+}
+.chat-head { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--crema-soft); display: grid; place-items: center; flex: none; }
+.chat-head .t { min-width: 0; flex: 1; }
+.chat-head .t b { display: block; }
+.status { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--crema); }
+.status.live .dot { background: var(--accent); }
+.close-sheet { display: none; border: 0; background: transparent; font-size: 24px; line-height: 1; cursor: pointer; color: var(--muted); padding: 4px 8px; }
+
+.log { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.msg { max-width: 86%; padding: 10px 13px; border-radius: 16px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.msg.bot { background: var(--bubble-bot); border-bottom-left-radius: 4px; align-self: flex-start; }
+.msg.me { background: var(--bubble-me); color: #fff; border-bottom-right-radius: 4px; align-self: flex-end; }
+.msg.thinking { color: var(--muted); font-style: italic; }
+.sys { align-self: center; font-size: 12px; color: var(--muted); text-align: center; max-width: 92%; }
+.lead-card { align-self: stretch; border: 1px solid var(--accent); border-radius: 12px; padding: 10px 12px; font-size: 13px; background: var(--surface); }
+.lead-card b { color: var(--accent); }
+
+.suggest { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 16px 10px; }
+.suggest button { border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 6px 11px; font-size: 13px; cursor: pointer; }
+.suggest button:hover { border-color: var(--accent); }
+
+form.compose { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+form.compose textarea { flex: 1; min-width: 0; resize: none; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 10px 12px; height: 44px; max-height: 120px; }
+form.compose button { border: 0; border-radius: 12px; background: var(--accent); color: var(--accent-ink); font-weight: 600; padding: 0 16px; cursor: pointer; }
+form.compose button[disabled] { opacity: .5; cursor: default; }
+
+/* Owner's Telegram feed */
+.owner { margin-top: 16px; background: var(--tg); color: var(--tg-ink); border-radius: 18px; padding: 14px 16px; }
+.owner h3 { font-size: 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.owner ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-height: 220px; overflow-y: auto; }
+.owner li { background: var(--surface); color: var(--ink); border-radius: 10px; padding: 8px 10px; font-size: 13px; white-space: pre-wrap; }
+.owner li .when { color: var(--muted); font-size: 11px; display: block; margin-bottom: 2px; }
+.owner .ex { font-size: 11px; color: var(--muted); }
+
+.fab { display: none; }
+
+@media (max-width: 960px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .side { position: fixed; inset: 0; z-index: 40; background: var(--bg); padding-top: env(safe-area-inset-top, 0px);
+          padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); overflow-y: auto; }
+  .side.closed { display: none; }
+  .chat { position: static; margin: 0; border-radius: 0; border: 0; box-shadow: none; height: 100%; min-height: 0; }
+  .side .owner { margin: 12px max(16px, env(safe-area-inset-left, 0px)) 24px; }
+  .side:not(.closed) { display: flex; flex-direction: column; }
+  .side:not(.closed) .chat { flex: 1 0 auto; height: calc(100% - 4px); min-height: 70vh; }
+  .close-sheet { display: block; }
+  .fab {
+    display: flex; align-items: center; gap: 10px; position: fixed; z-index: 30;
+    right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 999px; padding: 12px 18px 12px 14px;
+    font-weight: 600; box-shadow: var(--shadow); cursor: pointer;
+  }
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .cup { max-width: 200px; order: -1; justify-self: start; }
+  .info { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .menu { grid-template-columns: minmax(0, 1fr); }
+  nav.links { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .msg, .lead-card { animation: pop .18s ease-out; }
+  @keyframes pop { from { transform: translateY(4px); opacity: .4; } to { transform: none; opacity: 1; } }
+}
+</style>
+</head>
+<body>
+
+<div class="demo-bar"><div class="in">
+  <span><b>Demo eines KI-Chat-Assistenten.</b> Das Café ist fiktiv – stellen Sie im Chat einfach eine Frage.</span>
+  <span>Anfragen aus dem Chat landen beim Inhaber (Bereich „Telegram des Inhabers").</span>
+</div></div>
+
+<div class="shell">
+  <main class="site">
+    <header class="top">
+      <div class="logo">Milchschaum<small>Café · Berlin-Kreuzberg</small></div>
+      <nav class="links" aria-label="Bereiche">
+        <a href="#menu">Karte</a><a href="#info">Anfahrt</a><a href="#about">Über uns</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="kicker">Specialty Coffee um die Ecke</div>
+        <h1>Frisch gerösteter Kaffee und Frühstück bis mittags</h1>
+        <p class="lead">Wir brühen Espresso aus Äthiopien und Kolumbien und backen unsere Zimtschnecken selbst. Mit Hund, mit Laptop, mit Freunden.</p>
+        <div class="facts">
+          <span class="chip">Mo–Fr 8:00–19:00</span>
+          <span class="chip">Sa–So 9:00–18:00</span>
+          <span class="chip">Musterstraße 12</span>
+        </div>
+      </div>
+      <svg class="cup" viewBox="0 0 200 200" role="img" aria-label="Cappuccino von oben">
+        <circle cx="100" cy="100" r="92" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/>
+        <circle cx="100" cy="100" r="66" fill="var(--crema)"/>
+        <circle cx="100" cy="100" r="58" fill="var(--crema-soft)" opacity=".25"/>
+        <path d="M100 62c-16 10-22 24-14 36 4 6 10 9 14 18 4-9 10-12 14-18 8-12 2-26-14-36z" fill="var(--surface)" opacity=".92"/>
+        <path d="M100 74v44" stroke="var(--crema)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M100 124c-8 4-12 8-12 12h24c0-4-4-8-12-12z" fill="var(--surface)" opacity=".92"/>
+      </svg>
+    </section>
+
+    <section class="block" id="menu">
+      <div class="kicker">Karte</div>
+      <h2>Was wir brühen und backen</h2>
+      <div class="menu" id="menuList"></div>
+    </section>
+
+    <section class="block" id="info">
+      <div class="kicker">Anfahrt</div>
+      <h2>Adresse und Service</h2>
+      <dl class="info">
+        <div><dt>Adresse</dt><dd>Musterstraße 12, 10999 Berlin. 3 Minuten von der U-Bahn Görlitzer Bahnhof</dd></div>
+        <div><dt>Öffnungszeiten</dt><dd>Mo–Fr 8:00–19:00<br>Sa–So 9:00–18:00<br>Frühstück bis 12:00 (Wochenende bis 14:00)</dd></div>
+        <div><dt>Telefon</dt><dd>030 1234567 (Demo)</dd></div>
+        <div><dt>Zahlung</dt><dd>EC-Karte, Kreditkarte, Apple Pay, Google Pay, bar</dd></div>
+        <div><dt>Lieferung</dt><dd>Über Wolt und Lieferando, 10:00–18:00</dd></div>
+        <div><dt>Treuekarte</dt><dd>Jeder 10. Kaffee gratis</dd></div>
+      </dl>
+    </section>
+
+    <section class="block" id="about">
+      <div class="kicker">Über uns</div>
+      <h2>34 Plätze drinnen, 20 auf der Terrasse</h2>
+      <p style="max-width:62ch;color:var(--muted)">Kostenloses WLAN, Steckdosen an den meisten Tischen, barrierefreier Eingang. Jeden ersten Freitag im Monat um 18:00 Uhr Cupping: Verkostung der neuen Bohne, 15 € pro Person, mit Anmeldung.</p>
+    </section>
+  </main>
+
+  <aside class="side closed" id="side" aria-label="KI-Assistent">
+    <div class="chat">
+      <div class="chat-head">
+        <div class="avatar" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--crema)" stroke-width="2" stroke-linecap="round"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3c0 1.5 1 1.5 1 3M12 3c0 1.5 1 1.5 1 3"/></svg>
+        </div>
+        <div class="t">
+          <b>KI-Assistent · Café Milchschaum</b>
+          <span class="status" id="status"><span class="dot"></span><span id="statusText">Verbinde …</span></span>
+        </div>
+        <button class="close-sheet" id="closeSheet" type="button" aria-label="Chat schließen">×</button>
+      </div>
+      <div class="log" id="log" aria-live="polite"></div>
+      <div class="suggest" id="suggest"></div>
+      <form class="compose" id="compose">
+        <label for="q" style="position:absolute;left:-9999px">Ihre Frage</label>
+        <textarea id="q" rows="1" placeholder="Ihre Frage …" autocomplete="off"></textarea>
+        <button id="send" type="submit">Senden</button>
+      </form>
+    </div>
+    <div class="owner">
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 4.3 2.9 11.5c-1 .4-1 1.7 0 2l4.6 1.5 1.8 5.6c.3.8 1.3 1 1.9.4l2.6-2.5 4.6 3.4c.7.5 1.7.1 1.9-.7L23 5.6c.2-1-.6-1.7-1.5-1.3zM9.7 14.6l8.4-6.5-6.6 7.6-.3 3.3-1.5-4.4z"/></svg>Telegram des Inhabers</h3>
+      <ul id="leads"></ul>
+      <div class="ex">So sieht der Inhaber die Anfragen, die der Assistent gesammelt hat – auch per E-Mail möglich.</div>
+    </div>
+  </aside>
+</div>
+
+<button class="fab" id="fab" type="button" aria-controls="side">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>
+  Fragen? Chat
+</button>
+
+<script>
+const BUSINESS = {
+  "Name": "Café Milchschaum (fiktiver Demo-Betrieb)",
+  "Adresse": "Musterstraße 12, 10999 Berlin-Kreuzberg, 3 Minuten von der U-Bahn Görlitzer Bahnhof",
+  "Öffnungszeiten": "Mo–Fr 8:00–19:00, Sa–So 9:00–18:00. Frühstück bis 12:00, am Wochenende bis 14:00. Feiertage 10:00–17:00. Küche schließt 30 Minuten vor Ladenschluss.",
+  "Telefon": "030 1234567 (Demo-Nummer)",
+  "E-Mail": "hallo@cafe-milchschaum.example",
+  "Zahlung": "EC-Karte, Kreditkarte, Apple Pay, Google Pay, bar",
+  "Lieferung und Abholung": "Lieferung über Wolt und Lieferando, 10:00–18:00. Vorbestellung zum Abholen über diesen Chat, Abholung ohne Wartezeit.",
+  "Treuekarte": "Jeder 10. Kaffee gratis.",
+  "Räume": "34 Plätze innen, 20 auf der Terrasse (Mai bis September). Kostenloses WLAN, Steckdosen an den meisten Tischen. Hunde willkommen, Wassernapf vorhanden. Barrierefreier Eingang und barrierefreies WC.",
+  "Reservierung": "Tische für 2–8 Personen. Gruppen über 8 Personen telefonisch. Am Wochenende Reservierungen nur bis 12:00, danach freie Platzwahl. Das Team bestätigt jede Reservierung per Telefon oder E-Mail.",
+  "Pflanzenmilch": "Hafer-, Mandel- oder Sojamilch +0,50 €. Laktosefreie Kuhmilch ohne Aufpreis.",
+  "Allergene": "Glutenfrei: Granola-Bowl, Shakshuka ohne Brot. Vegan: Granola-Bowl, Bananenbrot, alle Kaffeegetränke mit Pflanzenmilch. Nüsse im Karottenkuchen, Mandelcroissant und Granola.",
+  "Veranstaltungen": "Cupping jeden ersten Freitag im Monat, 18:00, 15 € pro Person, Anmeldung nötig. Latte-Art-Workshop jeden zweiten Samstag, 10:00, 39 € pro Person, max. 6 Personen.",
+  "Kaffeebohnen": "250 g zum Mitnehmen ab 12,90 €."
+};
+const MENU = [
+  { cat: "Kaffee", items: [
+    ["Espresso", "2,40", "Äthiopien Yirgacheffe, beerig und blumig"],
+    ["Cappuccino", "3,60", "auch mit Pflanzenmilch"],
+    ["Flat White", "4,00", "doppelter Espresso"],
+    ["Latte Macchiato", "3,90", ""],
+    ["Americano", "3,00", ""],
+    ["Filterkaffee V60", "4,20", "Bohne der Woche"]
+  ]},
+  { cat: "Ohne Kaffee", items: [
+    ["Matcha Latte", "4,50", ""],
+    ["Chai Latte", "4,20", ""],
+    ["Heiße Schokolade", "3,80", ""],
+    ["Hausgemachte Limonade", "3,90", ""]
+  ]},
+  { cat: "Frühstück", items: [
+    ["Croissant mit Butter und Marmelade", "4,50", ""],
+    ["Avocado-Brot mit pochiertem Ei", "9,80", ""],
+    ["Granola-Bowl mit Kokosjoghurt", "7,50", "glutenfrei, vegan"],
+    ["Shakshuka mit Sauerteigbrot", "10,50", ""]
+  ]},
+  { cat: "Kuchen und Gebäck", items: [
+    ["Zimtschnecke", "3,40", "hausgemacht"],
+    ["Mandelcroissant", "3,60", ""],
+    ["Karottenkuchen", "4,20", "mit Walnüssen"],
+    ["Bananenbrot", "3,80", "vegan"]
+  ]}
+];
+
+const MENU_TEXT = MENU.map(g => g.cat + ":\n" + g.items.map(([n, p, d]) => `- ${n}: ${p} €${d ? " (" + d + ")" : ""}`).join("\n")).join("\n\n");
+const KB = Object.entries(BUSINESS).map(([k, v]) => k + ": " + v).join("\n") + "\n\nKARTE (Preise in Euro):\n" + MENU_TEXT;
+
+const RULES = `Du bist der KI-Assistent im Chat auf der Website des Café Milchschaum. Antworte in der Sprache des Gastes, sonst auf Deutsch mit „Sie". Freundlich und kurz: 1–4 Sätze, kein Markdown, keine Sternchen; Listen als einfache Zeilen mit „–".
+Nutze NUR die Fakten unten. Steht etwas nicht darin, sag ehrlich, dass du es nicht weißt, und verweise auf Telefon oder E-Mail. Erfinde keine Gerichte, Preise oder Angebote.
+Wenn jemand fragt, ob er mit einem Menschen spricht: Sag klar, dass du ein KI-Assistent bist.
+Reservierung, Vorbestellung oder Anmeldung zu einer Veranstaltung: Frage nach Name, Telefon oder E-Mail, Datum/Uhrzeit und Details (Personenzahl oder Bestellung). Wenn Name und Kontakt bekannt sind, rufe das Werkzeug create_request auf und sag, dass die Anfrage weitergeleitet ist und das Team sie bestätigt. Rufe das Werkzeug nicht ohne Name und Kontakt auf.
+Bleib beim Thema Café und lenke andere Themen freundlich zurück.
+
+FAKTEN ZUM CAFÉ:
+${KB}`;
+
+const GREETING = "Hallo! Ich bin der KI-Assistent vom Café Milchschaum. Ich helfe bei Fragen zu Karte und Preisen, Öffnungszeiten, reserviere einen Tisch oder nehme eine Vorbestellung zum Abholen auf. Was kann ich für Sie tun?";
+const SUGGESTIONS = ["Was ist vegan oder glutenfrei?", "Was kostet ein Cappuccino mit Hafermilch?", "Tisch für Samstag reservieren", "Darf ich meinen Hund mitbringen?"];
+
+const $ = id => document.getElementById(id);
+const log = $("log"), q = $("q"), send = $("send");
+let turns = [{ role: "user", content: RULES }, { role: "assistant", content: GREETING }];
+let sample = null, toolsOk = false, mode = "pending", busy = false, ctl = null;
+
+$("menuList").innerHTML = MENU.map(g =>
+  `<h3>${g.cat}</h3>` + g.items.map(([n, p, d]) =>
+    `<div class="item"><span class="name">${n}</span><span class="price">${p} €</span>${d ? `<span class="note">${d}</span>` : ""}</div>`
+  ).join("")
+).join("");
+
+function addMsg(text, who) {
+  const el = document.createElement("div");
+  el.className = "msg " + who; el.textContent = text;
+  log.append(el); log.scrollTop = log.scrollHeight; return el;
+}
+function addSys(text) {
+  const el = document.createElement("div");
+  el.className = "sys"; el.textContent = text; log.append(el); log.scrollTop = log.scrollHeight;
+}
+function setStatus(live, text) { $("status").classList.toggle("live", live); $("statusText").textContent = text; }
+
+const leads = $("leads");
+function addLead(r, example) {
+  const li = document.createElement("li");
+  const when = document.createElement("span");
+  when.className = "when";
+  when.textContent = example ? "Beispiel" : "gerade eben · aus dem Website-Chat";
+  li.append(when, document.createTextNode(
+    `🔔 ${r.type || "Anfrage"}\nName: ${r.name || "–"}\nKontakt: ${r.phone || r.email || "–"}\nWann: ${r.when || "–"}${r.details ? "\nDetails: " + r.details : ""}`
+  ));
+  leads.prepend(li);
+  if (!example) {
+    const card = document.createElement("div");
+    card.className = "lead-card";
+    card.innerHTML = "<b>✓ Anfrage an den Inhaber übermittelt</b>";
+    card.append(document.createTextNode(` · ${r.type || "Anfrage"}${r.when ? ", " + r.when : ""}`));
+    log.append(card); log.scrollTop = log.scrollHeight;
+    const ex = leads.querySelector("[data-example]");
+    if (ex) ex.remove();
+  } else li.dataset.example = "1";
+}
+addLead({ type: "Tischreservierung", name: "Lena", phone: "0151 0000000", when: "Freitag, 19:00", details: "4 Personen, Terrasse" }, true);
+
+SUGGESTIONS.forEach(s => {
+  const b = document.createElement("button");
+  b.type = "button"; b.textContent = s;
+  b.onclick = () => { q.value = s; ask(); };
+  $("suggest").append(b);
+});
+addMsg(GREETING, "bot");
+
+const OFFLINE = [
+  [/vegan|gluten|allerg|nuss|nüsse|laktose/i, "Vegan sind die Granola-Bowl (7,50 €), das Bananenbrot (3,80 €) und alle Kaffeegetränke mit Pflanzenmilch. Glutenfrei: Granola-Bowl und Shakshuka ohne Brot. Nüsse sind im Karottenkuchen, Mandelcroissant und in der Granola."],
+  [/hafer|mandel|soja|pflanzenmilch/i, "Ein Cappuccino kostet 3,60 €, mit Hafer-, Mandel- oder Sojamilch kommen 0,50 € dazu – also 4,10 €. Laktosefreie Kuhmilch ist ohne Aufpreis."],
+  [/hund/i, "Ja, Hunde sind herzlich willkommen! Einen Wassernapf haben wir auch."],
+  [/reserv|tisch|platz frei/i, "Sehr gern! Für wie viele Personen, an welchem Tag und um wie viel Uhr? Und Ihren Namen sowie eine Telefonnummer oder E-Mail bitte."],
+  [/vorbestell|abhol|mitnehmen|to go/i, "Gern! Was dürfen wir vorbereiten und wann holen Sie es ab? Dazu bitte Ihren Namen und eine Telefonnummer."],
+  [/liefer|wolt|lieferando/i, "Wir liefern über Wolt und Lieferando, täglich von 10:00 bis 18:00 Uhr."],
+  [/öffnungszeit|geöffnet|offen|wann.*(auf|zu)|uhrzeit|bis wann/i, "Wir haben Mo–Fr von 8:00 bis 19:00 Uhr und Sa–So von 9:00 bis 18:00 Uhr geöffnet. Frühstück gibt es bis 12:00 Uhr, am Wochenende bis 14:00 Uhr."],
+  [/adresse|wo (seid|sind)|anfahrt|u-bahn|finden/i, "Sie finden uns in der Musterstraße 12, 10999 Berlin – 3 Minuten zu Fuß von der U-Bahn Görlitzer Bahnhof."],
+  [/wlan|wifi|wi-fi|laptop|steckdose|arbeiten/i, "Ja, wir haben kostenloses WLAN und Steckdosen an den meisten Tischen – ideal zum Arbeiten."],
+  [/zahl|karte|bar|apple pay|paypal/i, "Sie können mit EC-Karte, Kreditkarte, Apple Pay, Google Pay oder bar bezahlen."],
+  [/barriere|rollstuhl|kinderwagen/i, "Unser Eingang ist ebenerdig und wir haben ein barrierefreies WC."],
+  [/treue|rabatt|gutschein|angebot|aktion/i, "Mit unserer Treuekarte ist jeder 10. Kaffee gratis. Weitere Rabatte bieten wir derzeit nicht an."],
+  [/cupping|verkost|workshop|latte.art|veranstalt|event/i, "Cupping gibt es jeden ersten Freitag im Monat um 18:00 Uhr (15 €), den Latte-Art-Workshop jeden zweiten Samstag um 10:00 Uhr (39 €, max. 6 Personen). Soll ich Sie anmelden? Dann bitte Name und Telefonnummer."],
+  [/mensch|echt|bot|ki\b|künstlich/i, "Ich bin ein KI-Assistent. Für alles, was ich nicht beantworten kann, erreichen Sie das Team unter 030 1234567."],
+  [/english|englisch/i, "Of course! I can answer in English too. What would you like to know?"],
+  [/frühstück|shakshuka|avocado|croissant|granola/i, "Frühstück: Croissant mit Butter und Marmelade 4,50 €, Avocado-Brot mit pochiertem Ei 9,80 €, Granola-Bowl 7,50 €, Shakshuka mit Sauerteigbrot 10,50 €. Bis 12:00 Uhr, am Wochenende bis 14:00 Uhr."],
+  [/kuchen|zimtschnecke|gebäck|süß/i, "Zimtschnecke 3,40 €, Mandelcroissant 3,60 €, Karottenkuchen 4,20 €, veganes Bananenbrot 3,80 €. Alles hausgemacht."],
+  [/kaffee|cappuccino|espresso|latte|flat white|preis|kostet|karte|menü/i, "Espresso 2,40 €, Americano 3,00 €, Cappuccino 3,60 €, Latte Macchiato 3,90 €, Flat White 4,00 €, Filterkaffee V60 4,20 €. Die ganze Karte sehen Sie links auf der Seite."]
+];
+let offlineLead = null;
+function offlineAnswer(text) {
+  const contact = text.match(/(\+?\d[\d\s\/()-]{6,}\d)/) || text.match(/[\w.+-]+@[\w-]+\.[\w.]+/);
+  if (offlineLead || /reserv|tisch|vorbestell|abhol|anmeld|cupping|workshop/i.test(text)) {
+    offlineLead = offlineLead || { type: /vorbestell|abhol/i.test(text) ? "Vorbestellung" : /cupping|workshop|anmeld/i.test(text) ? "Anmeldung Veranstaltung" : "Tischreservierung", raw: [] };
+    offlineLead.raw.push(text);
+    if (contact) {
+      const name = (text.match(/(?:ich bin|ich heiße|mein name ist|name:?)\s+([A-ZÄÖÜ][a-zäöüß]+)/i) || text.match(/^([A-ZÄÖÜ][a-zäöüß]+)[,\s]/) || [])[1] || "Gast";
+      const when = (offlineLead.raw.join(" ").match(/(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|heute|morgen)[^,.]*?\d{1,2}([:.]\d{2})?\s*(uhr)?/i) || [])[0] || "siehe Details";
+      const r = { type: offlineLead.type, name, phone: contact[1] || contact[0], when, details: offlineLead.raw.join(" / ") };
+      offlineLead = null;
+      addLead(r, false);
+      return `Vielen Dank, ${name}! Ihre Anfrage ist weitergeleitet. Das Team bestätigt sie kurzfristig per Telefon oder E-Mail.`;
+    }
+  }
+  for (const [re, a] of OFFLINE) if (re.test(text)) return a;
+  return "Das kann ich im Demo-Modus leider nicht beantworten. Mit voller KI versteht der Assistent jede Formulierung. Fragen Sie z. B. nach Karte, Öffnungszeiten, Reservierung oder Lieferung – oder rufen Sie uns an: 030 1234567.";
+}
+
+function goOffline(reason) {
+  mode = "offline";
+  setStatus(false, "Demo-Modus: vorbereitete Antworten");
+  if (reason) addSys(reason);
+}
+
+const tools = [{
+  name: "create_request",
+  description: "Leitet eine Anfrage des Gastes an den Inhaber weiter: Tischreservierung, Vorbestellung oder Anmeldung zu einer Veranstaltung. Nur aufrufen, wenn Name und Telefon oder E-Mail bekannt sind. Gibt eine Bestätigung zurück.",
+  inputSchema: { type: "object", properties: {
+    type: { type: "string", description: "Tischreservierung | Vorbestellung | Anmeldung Veranstaltung" },
+    name: { type: "string" }, phone: { type: "string", description: "Telefon oder E-Mail" },
+    when: { type: "string", description: "Datum und Uhrzeit" },
+    details: { type: "string", description: "Personenzahl, Wünsche oder Bestellung" }
+  }, required: ["type", "name", "phone"] },
+  execute(input) {
+    addLead({ type: String(input.type || "Anfrage"), name: String(input.name || ""), phone: String(input.phone || ""),
+              when: String(input.when || ""), details: String(input.details || "") }, false);
+    return { ok: true, message: "Anfrage an den Inhaber übermittelt" };
+  }
+}];
+
+async function ask() {
+  const text = q.value.trim();
+  if (!text || busy) return;
+  q.value = "";
+  addMsg(text, "me");
+  $("suggest").hidden = true;
+
+  if (mode !== "live") {
+    const el = addMsg("…", "bot thinking");
+    setTimeout(() => { el.className = "msg bot"; el.textContent = offlineAnswer(text); log.scrollTop = log.scrollHeight; }, 450);
+    return;
+  }
+
+  busy = true; send.disabled = true;
+  turns.push({ role: "user", content: text });
+  if (turns.length > 22) turns = [turns[0], ...turns.slice(-20)];
+  const el = addMsg("Schreibt …", "bot thinking");
+  ctl = new AbortController();
+  try {
+    const opts = { cache: false, modelTier: "quick", signal: ctl.signal,
+      onText: ({ text: t }) => { el.className = "msg bot"; el.textContent = t; log.scrollTop = log.scrollHeight; } };
+    if (toolsOk) { delete opts.cache; opts.tools = tools; }
+    const { text: answer } = await sample(turns, opts);
+    el.className = "msg bot"; el.textContent = answer;
+    turns.push({ role: "assistant", content: answer });
+  } catch (e) {
+    const code = e && e.code;
+    turns.pop();
+    if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed", "session_expired"].includes(code)) {
+      el.className = "msg bot"; el.textContent = offlineAnswer(text);
+      goOffline("KI ist in dieser Ansicht nicht verfügbar – Demo-Modus mit vorbereiteten Antworten ist aktiv.");
+    } else if (code === "rate_limited") {
+      el.className = "msg bot"; el.textContent = e.text || "Zu viele Fragen hintereinander. Bitte in einer Minute erneut versuchen.";
+    } else if (code === "cancelled") {
+      el.remove();
+    } else {
+      el.className = "msg bot"; el.textContent = (e && e.text) || "Die Verbindung wurde unterbrochen. Bitte senden Sie die Frage noch einmal.";
+    }
+  } finally {
+    busy = false; send.disabled = false; q.focus();
+  }
+}
+
+$("compose").addEventListener("submit", e => { e.preventDefault(); ask(); });
+q.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(); } });
+
+const side = $("side"), fab = $("fab");
+function openSheet() { side.classList.remove("closed"); fab.hidden = true; setTimeout(() => q.focus(), 50); }
+function closeSheet() { side.classList.add("closed"); fab.hidden = false; }
+fab.onclick = openSheet;
+$("closeSheet").onclick = closeSheet;
+const mq = matchMedia("(max-width: 960px)");
+function syncLayout() { if (mq.matches) closeSheet(); else { side.classList.remove("closed"); fab.hidden = true; } }
+mq.addEventListener("change", syncLayout); syncLayout();
+
+(async () => {
+  if (!window.claude || !window.claude.use) { goOffline(); return; }
+  try { sample = await window.claude.use("sample"); } catch { sample = null; }
+  if (!sample) { goOffline(); return; }
+  try { const lim = await sample.limits(); toolsOk = !!(lim && lim.tools); } catch { toolsOk = false; }
+  mode = "live";
+  setStatus(true, "KI online · antwortet in Sekunden");
+})();
+</script>
+
+</body>
+</html>
