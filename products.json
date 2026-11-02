@@ -1,0 +1,26 @@
+[
+  {
+    "id": "lullabies_pack",
+    "title": "Сборник колыбельных",
+    "description": "10 колыбельных в MP3 без рекламы — можно слушать офлайн.",
+    "type": "digital",
+    "price_stars": 50,
+    "delivery": "Спасибо за покупку! Ваша ссылка на скачивание: https://example.com/lullabies"
+  },
+  {
+    "id": "premium_month",
+    "title": "Премиум на 30 дней",
+    "description": "Доступ к закрытому каналу с новыми видео раньше всех.",
+    "type": "digital",
+    "price_stars": 100,
+    "delivery": "Добро пожаловать в премиум! Вступайте в канал: https://t.me/+example"
+  },
+  {
+    "id": "night_lamp",
+    "title": "Ночник «Звёздное небо»",
+    "description": "Проектор звёзд на потолок. Доставка по России.",
+    "type": "physical",
+    "price_rub": 1990,
+    "delivery": "Заказ оплачен! Мы свяжемся с вами для подтверждения доставки."
+  }
+]
