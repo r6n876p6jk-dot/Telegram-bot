@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: ki-chat-assistent
+    runtime: python
+    rootDir: ai-agent
+    region: frankfurt
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: MODEL
+        value: claude-opus-5-5
+      - key: EFFORT
+        value: low
+      - key: ALLOWED_ORIGINS
+        value: "*"
