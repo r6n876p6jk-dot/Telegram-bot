@@ -340,8 +340,16 @@ def on_paid(message):
     bot.send_message(message.chat.id, f"✅ Оплата прошла!\n\n{product['delivery']}")
     file_name = product.get("file")
     if file_name:
-        with open(BASE_DIR / file_name, "rb") as f:
-            bot.send_document(message.chat.id, f)
+        file_path = BASE_DIR / file_name
+        if file_path.exists():
+            with open(file_path, "rb") as f:
+                bot.send_document(message.chat.id, f)
+        else:
+            log.error("Файл товара не найден: %s", file_path)
+            bot.send_message(message.chat.id, "Файл скоро придёт — мы уже получили уведомление.")
+            if ADMIN_ID:
+                bot.send_message(ADMIN_ID, f"⚠️ Не найден файл товара <code>{file_name}</code> — "
+                                           f"отправьте его покупателю вручную: {user_link(message.from_user)}")
 
     # Уведомляем владельца
     if ADMIN_ID:
