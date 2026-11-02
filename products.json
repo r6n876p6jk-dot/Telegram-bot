@@ -1,26 +1,27 @@
 [
   {
-    "id": "lullabies_pack",
-    "title": "Сборник колыбельных",
-    "description": "10 колыбельных в MP3 без рекламы — можно слушать офлайн.",
+    "id": "course_bot",
+    "title": "Курс «Telegram-бот с оплатой за 1 вечер»",
+    "description": "Пошаговый курс: создание бота, приём Telegram Stars и оплаты картой, запуск 24/7.",
     "type": "digital",
-    "price_stars": 50,
-    "delivery": "Спасибо за покупку! Ваша ссылка на скачивание: https://example.com/lullabies"
+    "price_stars": 200,
+    "delivery": "Спасибо за покупку! Ваш курс: https://example.com/course"
   },
   {
-    "id": "premium_month",
-    "title": "Премиум на 30 дней",
-    "description": "Доступ к закрытому каналу с новыми видео раньше всех.",
+    "id": "bot_template",
+    "title": "Готовый шаблон бота-магазина",
+    "description": "Исходный код бота с каталогом и оплатой. Замените товары и запускайте.",
     "type": "digital",
     "price_stars": 100,
-    "delivery": "Добро пожаловать в премиум! Вступайте в канал: https://t.me/+example"
+    "delivery": "Спасибо за покупку! Шаблон: https://example.com/template"
   },
   {
-    "id": "night_lamp",
-    "title": "Ночник «Звёздное небо»",
-    "description": "Проектор звёзд на потолок. Доставка по России.",
+    "id": "setup_service",
+    "title": "Настройка бота под ключ",
+    "description": "Настрою и запущу бота-магазин с вашими товарами.",
     "type": "physical",
-    "price_rub": 1990,
-    "delivery": "Заказ оплачен! Мы свяжемся с вами для подтверждения доставки."
+    "price_rub": 2990,
+    "need_address": false,
+    "delivery": "Оплата получена! Я свяжусь с вами в ближайшее время."
   }
 ]

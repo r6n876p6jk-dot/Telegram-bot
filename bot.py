@@ -296,7 +296,8 @@ def cb_buy(call):
             prices=[types.LabeledPrice(product["title"], product["price_rub"] * 100)],
             need_name=True,
             need_phone_number=True,
-            need_shipping_address=True,
+            # для услуг адрес не нужен: "need_address": false в products.json
+            need_shipping_address=product.get("need_address", True),
         )
     bot.answer_callback_query(call.id)
 
