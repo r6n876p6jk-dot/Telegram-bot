@@ -39,7 +39,15 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN")
 PROVIDER_TOKEN = os.environ.get("PROVIDER_TOKEN", "")
 ADMIN_ID = int(os.environ["ADMIN_ID"]) if os.environ.get("ADMIN_ID") else None
 CARD_CURRENCY = os.environ.get("CARD_CURRENCY", "RUB")
-DB_PATH = BASE_DIR / "shop.db"
+# Постоянное хранилище: на Amvera это /data (не стирается при обновлениях бота)
+DATA_DIR = Path(os.environ.get("DATA_DIR") or ("/data" if Path("/data").is_dir() else BASE_DIR))
+DB_PATH = DATA_DIR / "shop.db"
+
+
+def find_file(name: str) -> Path:
+    """Ищет файл товара/курса рядом с ботом, а если его там нет — в DATA_DIR."""
+    local = BASE_DIR / name
+    return local if local.exists() else DATA_DIR / name
 
 if not BOT_TOKEN:
     raise SystemExit("Не задан BOT_TOKEN. Создайте файл .env по образцу .env.example")
@@ -65,7 +73,7 @@ PRODUCTS = load_products()
 # Уроки лежат в files/lessons.json: [{"title": ..., "free": true/false, "text": "<HTML>"}, ...]
 # Уроки с "free": true доступны всем, остальные — после покупки товара с "course": true.
 
-LESSONS_PATH = BASE_DIR / "files" / "lessons.json"
+LESSONS_PATH = find_file("files/lessons.json")
 LESSONS = json.loads(LESSONS_PATH.read_text(encoding="utf-8")) if LESSONS_PATH.exists() else []
 COURSE_PRODUCT = next((p for p in PRODUCTS.values() if p.get("course")), None)
 TG_LIMIT = 4000  # лимит сообщения Telegram — 4096 символов
@@ -477,7 +485,7 @@ def on_paid(message):
     bot.send_message(message.chat.id, f"✅ Оплата прошла!\n\n{product['delivery']}")
     file_name = product.get("file")
     if file_name:
-        file_path = BASE_DIR / file_name
+        file_path = find_file(file_name)
         if file_path.exists():
             with open(file_path, "rb") as f:
                 bot.send_document(message.chat.id, f)
